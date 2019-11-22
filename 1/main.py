@@ -4,18 +4,16 @@ Created on Fri Nov 22 12:11:56 2019
 
 @author: sriram1204
 """
+import random
 """for RestCall """
 import requests
 """For commandline"""
 import os
+
 #params or definitions
-#word="field"
 url="https://fourtytwowords.herokuapp.com"
 api_key="b972c7ca44dda72a5b482052b1f5e13470e01477f3fb97c85d5313b3c112627073481104fec2fb1a0cc9d84c2212474c0cbe7d8e59d7b95c7cb32a1133f778abd1857bf934ba06647fda4f59e878d164"
 FAILED_CONSTANT = "requested_failed"
-#endpoints
-
-
 
 #helper functions
 def response_data(raw_response_data): 
@@ -46,31 +44,35 @@ def word_definition(word):
     definition = list()
     
     if(data['status'] == 200): 
-        print("Definition")
         for i in data['data']:
             definition.append(i['text'])
-            print(i['text'])
-        print("\n")
     else: 
         definition.append('No Definitions')
-        print('No Definitions')
-        print("\n")
+        
+    return definition
 
-def word_syn_and_ant(word): 
+def word_ant(word): 
     wrel_endpoint="/word/{0}/relatedWords?api_key={1}".format(word,api_key)
     data = requester(wrel_endpoint)
     
-    f_dict = dict()
     if(data['status'] == 200): 
         for i in data['data']:
-            print("\n")
-            f_dict[i['relationshipType']] = i['words']
-            print(i['relationshipType'])
-            print('\n'.join(i['words']))
-        print("\n")
+            if(i['relationshipType'] == "antonym"): 
+                return i["words"]
     else: 
-        print("No Syn or Ant")            
+        return list()           
 
+def word_syn(word): 
+    wrel_endpoint="/word/{0}/relatedWords?api_key={1}".format(word,api_key)
+    data = requester(wrel_endpoint)
+    
+    if(data['status'] == 200): 
+        for i in data['data']:
+            if(i['relationshipType'] == "synonym"): 
+                return i["words"]
+    else: 
+        return list()           
+    
 def word_example(word): 
     weg_endpoint="/word/{0}/examples?api_key={1}".format(word,api_key)
     data = requester(weg_endpoint)
@@ -85,11 +87,15 @@ def word_example(word):
     else: 
         example.append('No Examples')
         print('No Examples\n')
+    
 
 def word_full(word): 
-    word_definition(word)
-    word_syn_and_ant(word)
-    word_example(word)
+    definitions = word_definition(word)
+    ant = word_ant(word)
+    syn = word_syn(word)
+    eg = word_example(word)
+    
+    print("{0}\n{1}\n{2}\n{3}".format(definitions,ant,syn,eg))
 
 def word_of_the_day(): 
     word = word_random()
@@ -100,7 +106,42 @@ def word_of_the_day():
     else: 
         print("No Word for the day")
 
-word_of_the_day()
+def word_play(): 
+    word = word_random()
+    definitions = word_definition(word)
+    ant = word_ant(word)
+    syn = word_syn(word)
+    eg = word_example(word)
+    
+    if(len(definitions) > 0): 
+        print("Definition:Clue")
+        print(definitions[random.randint(0,len(definitions))])
+    
+    if(len(syn) > 0 and len(ant) > 0):
+        choice = random.randint(0,1)
+        
+        if(choice == 0):
+            print(syn[random.randint(0,len(syn))])
+        
+        if(choice == 1):
+            print(ant[random.randint(0,len(ant))])
+    
+    elif(len(syn) > 0 and len(ant) == 0):
+        print(syn[random.randint(0,len(syn))])
+    elif(len(ant) > 0 and len(syn) == 0):
+        print(ant[random.randint(0,len(ant))])
+    
+    answer = str(input("The Word is?:")).lower()
+    
+    if(answer == word or answer in syn): 
+        print("Success")
+    
+    else: 
+        print("Incorrect")
+        
+        
+    
+    
     
 
 
