@@ -24,7 +24,7 @@ def response_data(raw_response_data):
     data['data'] = raw_response_data.json()
     
     return data
-def requester(endpoint): 
+def requester(endpoint=wrnd_endpoint): 
     f_url = url+endpoint
     raw_response_data = requests.get(url = f_url)
     f_data = response_data(raw_response_data)
@@ -46,13 +46,15 @@ def word_definition(word):
     definition = list()
     
     if(data['status'] == 200): 
+        print("Definition")
         for i in data['data']:
             definition.append(i['text'])
-            print("Definition\n")
             print(i['text'])
+        print("\n")
     else: 
         definition.append('No Definitions')
         print('No Definitions')
+        print("\n")
 
 def word_syn_and_ant(word): 
     wrel_endpoint="/word/{0}/relatedWords?api_key={1}".format(word,api_key)
@@ -61,10 +63,11 @@ def word_syn_and_ant(word):
     f_dict = dict()
     if(data['status'] == 200): 
         for i in data['data']:
+            print("\n")
             f_dict[i['relationshipType']] = i['words']
             print(i['relationshipType'])
-            print("\n")
-            print(i['words'])
+            print('\n'.join(i['words']))
+        print("\n")
     else: 
         print("No Syn or Ant")            
 
@@ -74,13 +77,14 @@ def word_example(word):
     example = list()
     
     if(data['status'] == 200): 
-        for i in data['data']:
+        print("Examples\n")
+        for i in data['data']['examples']:
             example.append(i['text'])
-            print("Examples\n")
             print(i['text'])
+            print("\n")
     else: 
         example.append('No Examples')
-        print('No Examples')
+        print('No Examples\n')
 
 def word_full(word): 
     word_definition(word)
