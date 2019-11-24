@@ -47,7 +47,7 @@ def word_definition(word):
         for i in data['data']:
             definition.append(i['text'])
     else: 
-        definition.append('No Definitions')
+        definition.append('No Definitions for the word'.format(word))
         
     return definition
 
@@ -59,6 +59,7 @@ def word_ant(word):
         for i in data['data']:
             if(i['relationshipType'] == "antonym"): 
                 return i["words"]
+        return list()
     else: 
         return list()           
 
@@ -70,8 +71,9 @@ def word_syn(word):
         for i in data['data']:
             if(i['relationshipType'] == "synonym"): 
                 return i["words"]
+        return list()
     else: 
-        return list()           
+        return list('')           
     
 def word_example(word): 
     weg_endpoint="/word/{0}/examples?api_key={1}".format(word,api_key)
@@ -79,15 +81,12 @@ def word_example(word):
     example = list()
     
     if(data['status'] == 200): 
-        print("Examples\n")
         for i in data['data']['examples']:
             example.append(i['text'])
-            print(i['text'])
-            print("\n")
     else: 
         example.append('No Examples')
-        print('No Examples\n')
     
+    return example    
 
 def word_full(word): 
     definitions = word_definition(word)
@@ -118,7 +117,7 @@ def validateAnswer(word,syn):
     return False
 
 def showHints(word,definitions,ant,syn,comingBack=False): 
-    
+#state of variable has to be maintained,only for word play
     if(comingBack): 
         print("Jumbled Form of Word:{}".format(shuffleWord(word)))
         
@@ -187,6 +186,35 @@ def word_play():
             continue
     
 def main():
+    if(len(sys.argv) > 3):
+        print("Execute with one params and one arg,for eg\n1- defn <word>\n2- syn<word>\n3- ant<word>\n4- ex<word>\n5- <word>\n6- just execute\n7- play")
+    
+    if(len(sys.argv) == 3):
+        func = sys.argv[1]
+        word = sys.argv[2]
+        
+        if(func == 'defn'):
+            print(word_definition(word))
+        if(func == 'syn'):
+            print(word_syn(word))
+        if(func == 'ant'):
+            print(word_ant(word))
+        if(func == 'ex'):
+            print(word_example(word))
+    
+    if(len(sys.argv) == 2):
+        param = sys.argv[1]
+        if(param == 'play'):
+            word_play()
+        elif(param == '/^[a-zA-Z]+$/'):
+            word_full(word)
+            
+    if(len(sys.argv) == 1):
+        word_of_the_day()
+        
+    
+        
+main()      
     
     
 
