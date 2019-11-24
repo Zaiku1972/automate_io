@@ -1,0 +1,17 @@
+1) Execute the assignment in CMD with the following command, python main.py <args>
+	- Arguements 
+		- Type : function name, word
+			- Examples:
+				- python main.py defn clear
+				- python main.py syn clear
+				- python main.py ant clear
+				- python main.py ex clear
+		- Type: function name,
+			- Example: 
+				- python main.py play
+		- Type: word
+			- Example: 
+				- python main.py clear
+		- Type: No Arguements
+			- Example:
+				- python main.py
