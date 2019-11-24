@@ -22,7 +22,7 @@ def response_data(raw_response_data):
     data['data'] = raw_response_data.json()
     
     return data
-def requester(endpoint=wrnd_endpoint): 
+def requester(endpoint): 
     f_url = url+endpoint
     raw_response_data = requests.get(url = f_url)
     f_data = response_data(raw_response_data)
@@ -106,6 +106,56 @@ def word_of_the_day():
     else: 
         print("No Word for the day")
 
+def shuffleWord(word): 
+    tempWord = list(word)
+    random.shuffle(tempWord)
+    return ''.join(tempWord)
+    
+def validateAnswer(word,syn):
+    answer = str(input("The Word is?:")).lower()
+    if(answer == word or answer in syn): 
+        return True
+    return False
+
+def showHints(word,definitions,ant,syn,comingBack=False): 
+    
+    if(comingBack): 
+        print("Jumbled Form of Word:{}".format(shuffleWord(word)))
+        
+    if(len(definitions) > 0): 
+        randomChoice = random.randint(0,len(definitions) - 1)
+        print("Definition:Clue")
+        print(definitions[randomChoice])
+        del definitions[randomChoice]
+    
+    if(len(syn) > 0 and len(ant) > 0):
+        choice = random.randint(0,1)
+        
+        if(choice == 0):
+            print("Syn:Clue")
+            randomChoice = random.randint(0,len(syn) -1) 
+            print(syn[randomChoice])
+            del syn[randomChoice]
+
+        if(choice == 1):
+            print("Ant:Clue")
+            randomChoice = random.randint(0,len(ant) - 1) 
+            print(ant[randomChoice])
+            del ant[randomChoice]
+
+    
+    elif(len(syn) > 0 and len(ant) == 0):
+        print("Syn:Clue")
+        randomChoice = random.randint(0,len(syn) - 1) 
+        print(syn[randomChoice])
+        del syn[randomChoice]
+        
+    elif(len(ant) > 0 and len(syn) == 0):
+        print("Ant:Clue")
+        randomChoice = random.randint(0,len(syn) - 1) 
+        print(ant[randomChoice])
+        del randomChoice
+    
 def word_play(): 
     word = word_random()
     definitions = word_definition(word)
@@ -113,31 +163,28 @@ def word_play():
     syn = word_syn(word)
     eg = word_example(word)
     
-    if(len(definitions) > 0): 
-        print("Definition:Clue")
-        print(definitions[random.randint(0,len(definitions))])
+    showHints(word,definitions,ant,syn,comingBack=False)
+    result = validateAnswer(word,syn) 
     
-    if(len(syn) > 0 and len(ant) > 0):
-        choice = random.randint(0,1)
+    while(result != True): 
+        print("\n Wrong Answer")
+        print("\n1-Try Again\n2-Hint\n3-Quit")
+        choice = int(input("Enter Choice:"))
         
-        if(choice == 0):
-            print(syn[random.randint(0,len(syn))])
+        if(choice == 1): 
+            result = validateAnswer(word,syn)
         
-        if(choice == 1):
-            print(ant[random.randint(0,len(ant))])
-    
-    elif(len(syn) > 0 and len(ant) == 0):
-        print(syn[random.randint(0,len(syn))])
-    elif(len(ant) > 0 and len(syn) == 0):
-        print(ant[random.randint(0,len(ant))])
-    
-    answer = str(input("The Word is?:")).lower()
-    
-    if(answer == word or answer in syn): 
-        print("Success")
-    
-    else: 
-        print("Incorrect")
+        if(choice == 2): 
+            showHints(word,definitions,ant,syn,comingBack=True)
+            result = validateAnswer(word,syn)
+            
+        if(choice == 3):
+            print("Word is:{}".format(word))
+            break
+        
+        if(choice > 3): 
+            print("Wrong Choice")
+            continue
         
         
     
