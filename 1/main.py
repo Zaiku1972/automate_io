@@ -89,12 +89,24 @@ def word_example(word):
     return example    
 
 def word_full(word): 
-    definitions = word_definition(word)
-    ant = word_ant(word)
-    syn = word_syn(word)
-    eg = word_example(word)
+
+    print("Defn\n")
+    for i in word_definition(word):
+        print(i)
+                
+    print("Syn:\n")
+    for i in word_syn(word): 
+        print(i)
+                
+    print("Ant:\n")
+    for i in word_ant(word):
+        print(i)
+        
+    print("Exampes\n")
+    for i in word_example(word):
+        print(i)
     
-    print("{0}\n{1}\n{2}\n{3}".format(definitions,ant,syn,eg))
+    
 
 def word_of_the_day(): 
     word = word_random()
@@ -194,13 +206,24 @@ def main():
         word = sys.argv[2]
         
         if(func == 'defn'):
-            print(word_definition(word))
+            print("Defn\n")
+            for i in word_definition(word):
+                print(i)
+                
         if(func == 'syn'):
-            print(word_syn(word))
+            print("Syn:\n")
+            for i in word_syn(word): 
+                print(i)
+                
         if(func == 'ant'):
-            print(word_ant(word))
+            print("Ant:\n")
+            for i in word_ant(word):
+                print(i)
+        
         if(func == 'ex'):
-            print(word_example(word))
+            print("Examples\n")
+            for i in word_example(word):
+                print(i)
     
     if(len(sys.argv) == 2):
         param = sys.argv[1]
@@ -211,8 +234,6 @@ def main():
             
     if(len(sys.argv) == 1):
         word_of_the_day()
-        
-    
         
 main()      
     
