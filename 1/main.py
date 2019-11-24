@@ -8,7 +8,7 @@ import random
 """for RestCall """
 import requests
 """For commandline"""
-import os
+import sys
 
 #params or definitions
 url="https://fourtytwowords.herokuapp.com"
@@ -185,9 +185,8 @@ def word_play():
         if(choice > 3): 
             print("Wrong Choice")
             continue
-        
-        
     
+def main():
     
     
 
